@@ -11,25 +11,31 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.System;
 import java.net.URLDecoder;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by simsun on 1/9/16.
+ * 命令行工具
  */
 public class CliMain extends Main {
 
-    private static final String ARG_HELP        = "--help";
-    private static final String ARG_OUT         = "-out";
-    private static final String ARG_CONFIG      = "-config";
-    private static final String ARG_7ZIP        = "-7zip";
-    private static final String ARG_ZIPALIGN    = "-zipalign";
-    private static final String ARG_SIGNATURE   = "-signature";
+    private static final String ARG_HELP = "--help";
+    private static final String ARG_OUT = "-out";
+    private static final String ARG_CONFIG = "-config";
+    private static final String ARG_7ZIP = "-7zip";
+    private static final String ARG_ZIPALIGN = "-zipalign";
+    private static final String ARG_SIGNATURE = "-signature";
     private static final String ARG_KEEPMAPPING = "-mapping";
-    private static final String ARG_REPACKAGE   = "-repackage";
+    private static final String ARG_REPACKAGE = "-repackage";
 
+
+    /**
+     * 主方法
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         mBeginTime = System.currentTimeMillis();
         CliMain m = new CliMain();
@@ -56,41 +62,80 @@ public class CliMain extends Main {
         String command = "resousceproguard.jar"; //$NON-NLS-1$
         out.println();
         out.println();
-        out.println("Usage: java -jar " + command + " input.apk");
-        out.println("if you want to special the output path or config file path, you can input:");
-        out.println("Such as: java -jar " + command + " " + "input.apk " + ARG_CONFIG + " yourconfig.xml " + ARG_OUT + " output_directory");
-        out.println("if you want to special the sign or mapping data, you can input:");
-        out.println("Such as: java -jar " + command + " " + "input.apk " + ARG_CONFIG + " yourconfig.xml " + ARG_OUT + " output_directory " +
-            ARG_SIGNATURE + " signature_file_path storepass keypass storealias " + ARG_KEEPMAPPING + " mapping_file_path");
+     ///   out.println("Usage: java -jar " + command + " input.apk");
+        out.println("用法: java -jar " + command + " input.apk");
+        //  out.println();
 
-        out.println("if you want to special 7za or zipalign path, you can input:");
-        out.println("Such as: java -jar " + command + " " + "input.apk " + ARG_7ZIP + " /home/shwenzhang/tools/7za " + ARG_ZIPALIGN + "/home/shwenzhang/sdk/tools/zipalign");
+        //out.println("if you want to special the output path or config file path, you can input:");
+        out.println("指定输出路径或配置文件路径, 请输入:");
+        //out.println("Such as: java -jar " + command + " " + "input.apk " + ARG_CONFIG + " yourconfig.xml " + ARG_OUT + " output_directory");
+        out.println("例: java -jar " + command + " " + "input.apk " + ARG_CONFIG + " yourconfig.xml " + ARG_OUT + " output_directory");
+        out.println();
 
-        out.println("if you just want to repackage an apk compress with 7z:");
-        out.println("Such as: java -jar " + command + " " + ARG_REPACKAGE + " input.apk");
-        out.println("if you want to special the output path, 7za or zipalign path, you can input:");
-        out.println("Such as: java -jar " + command + " " + ARG_REPACKAGE + " input.apk" + ARG_OUT + " output_directory " + ARG_7ZIP + " /home/shwenzhang/tools/7za " + ARG_ZIPALIGN + "/home/shwenzhang/sdk/tools/zipalign");
+        // out.println("if you want to special the sign or mapping data, you can input:");
+        out.println("指定签名数据或混淆映射表, 请输入:");
+        // out.println("Such as: java -jar " + command + " " + "input.apk " + ARG_CONFIG + " yourconfig.xml " + ARG_OUT + " output_directory " +
+        //   ARG_SIGNATURE + " signature_file_path storepass keypass storealias " + ARG_KEEPMAPPING + " mapping_file_path");
+        out.println("例: java -jar " + command + " " + "input.apk " + ARG_CONFIG + " 配置文件.xml " + ARG_OUT + " output_directory " +
+                ARG_SIGNATURE + " signature_file_path storepass keypass storealias " + ARG_KEEPMAPPING + " mapping_file_path");
+        out.println();
+
+        //out.println("if you want to special 7za or zipalign path, you can input:");
+        out.println("指定7za或zipalign路径,请输入:");
+        // out.println("Such as: java -jar " + command + " " + "input.apk " + ARG_7ZIP + " /home/shwenzhang/tools/7za " + ARG_ZIPALIGN + "/home/shwenzhang/sdk/tools/zipalign");
+        out.println("例: java -jar " + command + " " + "input.apk " + ARG_7ZIP + " /home/shwenzhang/tools/7za " + ARG_ZIPALIGN + "/home/shwenzhang/sdk/tools/zipalign");
+        out.println();
+
+        // out.println("if you just want to repackage an apk compress with 7z:");
+        out.println("使用7z压缩 :");
+        // out.println("Such as: java -jar " + command + " " + ARG_REPACKAGE + " input.apk");
+        out.println("例: java -jar " + command + " " + ARG_REPACKAGE + " input.apk");
+        out.println();
+
+
+        // out.println("if you want to special the output path, 7za or zipalign path, you can input:");
+
+        out.println("指定7za、zipalign或输出路径, 请输入:");
+
+        out.println("例: java -jar " + command + " " + ARG_REPACKAGE + " input.apk" + ARG_OUT + " output_directory " + ARG_7ZIP + " /home/shwenzhang/tools/7za " + ARG_ZIPALIGN + "/home/shwenzhang/sdk/tools/zipalign");
         out.println();
         out.println("Flags:\n");
 
         printUsage(out, new String[]{
-            ARG_HELP, "This message.",
-            "-h", "short for -help",
-            ARG_OUT, "set the output directory yourself, if not, the default directory is the running location with name of the input file",
-            ARG_CONFIG, "set the config file yourself, if not, the default path is the running location with name config.xml",
-            ARG_SIGNATURE, "set sign property, following by parameters: signature_file_path storepass keypass storealias",
-            "  ", "if you set these, the sign data in the config file will be overlayed",
-            ARG_KEEPMAPPING, "set keep mapping property, following by parameters: mapping_file_path",
-            "  ", "if you set these, the mapping data in the config file will be overlayed",
-            ARG_7ZIP, "set the 7zip path, such as /home/shwenzhang/tools/7za, window will be end of 7za.exe",
-            ARG_ZIPALIGN, "set the zipalign, such as /home/shwenzhang/sdk/tools/zipalign, window will be end of zipalign.exe",
-            ARG_REPACKAGE, "usually, when we build the channeles apk, it may destroy the 7zip.",
-            "  ", "so you may need to use 7zip to repackage the apk",
+                //  ARG_HELP, "This message.",
+                ARG_HELP, "帮助信息",
+                "-h", "-help 的缩写",
+                // ARG_OUT, "set the output directory yourself, if not, the default directory is the running location with name of the input file",
+                ARG_OUT, "指定输出路径, 默认为工作目录下的输入文件",
+                //    ARG_CONFIG, "set the config file yourself, if not, the default path is the running location with name config.xml",
+                ARG_CONFIG, "指定配置文件, 默认为工作目录下的 config.xml",
+                //ARG_SIGNATURE, "set sign property, following by parameters: signature_file_path storepass keypass storealias",
+                ARG_SIGNATURE, "设置签名属性, 参数: signature_file_path storepass keypass storealias",
+               // "  ", "if you set these, the sign data in the config file will be overlayed",
+                "  ", "如果设置此参数,config.xml中的配置信息将被覆盖",
+              //  ARG_KEEPMAPPING, "set keep mapping property, following by parameters: mapping_file_path",
+                ARG_KEEPMAPPING, "设置混淆规则属性, 参数: mapping_file_path",
+                "  ", "如果设置此参数,  config.xml中的配置信息将被覆盖",
+
+               // ARG_7ZIP, "set the 7zip path, such as /home/shwenzhang/tools/7za, window will be end of 7za.exe",
+                ARG_7ZIP, "设置7zip路径, 例:/home/shwenzhang/tools/7za, window 系统下为 7za.exe",
+
+               // ARG_ZIPALIGN, "set the zipalign, such as /home/shwenzhang/sdk/tools/zipalign, window will be end of zipalign.exe",
+                ARG_ZIPALIGN, "设置 zipalign, 例: /home/shwenzhang/sdk/tools/zipalign, windows系统下为 zipalign.exe",
+
+
+              //  ARG_REPACKAGE, "usually, when we build the channeles apk, it may destroy the 7zip.",
+            //    "  ", "so you may need to use 7zip to repackage the apk",
+                ARG_REPACKAGE, "通常, 当我们生成新的 apk时, 可能会破坏 7zip.",
+                "  ", "所以可能需要用7zip重打包",
+
         });
         out.println();
-        out.println("if you donot know how to write the config file, look at the comment in the default config.xml");
-        out.println("if you want to use 7z, you must install the 7z command line version in window;");
-        out.println("sudo apt-get install p7zip-full in linux");
+        //out.println("if you donot know how to write the config file, look at the comment in the default config.xml");
+        out.println("配置文件的写法, 可参见默认的配置文件 config.xml");
+       // out.println("if you want to use 7z, you must install the 7z command line version in window;");
+        out.println("如果使用 7z, window 下 必须安装命令行版的 7z ;");
+        out.println("linux 下 : sudo apt-get install p7zip-full");
     }
 
     private static void printUsage(PrintStream out, String[] args) {
@@ -233,15 +278,15 @@ public class CliMain extends Main {
 
     private class ReadArgs {
         private String[] args;
-        private File     configFile;
-        private File     outputFile;
-        private String   apkFileName;
-        private File     signatureFile;
-        private File     mappingFile;
-        private String   keypass;
-        private String   storealias;
-        private String   storepass;
-        private String   signedFile;
+        private File configFile;
+        private File outputFile;
+        private String apkFileName;
+        private File signatureFile;
+        private File mappingFile;
+        private String keypass;
+        private String storealias;
+        private String storepass;
+        private String signedFile;
 
         public ReadArgs(String[] args) {
             this.args = args;
@@ -290,19 +335,29 @@ public class CliMain extends Main {
                     goToError();
                 } else if (arg.equals(ARG_CONFIG)) {
                     if (index == args.length - 1 || !args[index + 1].endsWith(TypedValue.XML_FILE)) {
-                        System.err.println("Missing XML configuration file argument");
+                        //System.err.println("Missing XML configuration file argument");
+                        System.err.println("没有找到XML配置文件参数");
+
                         goToError();
                     }
                     configFile = new File(args[++index]);
                     if (!configFile.exists()) {
-                        System.err.println(configFile.getAbsolutePath() + " does not exist");
+                       // System.err.println(configFile.getAbsolutePath() + " does not exist");
+
+                        System.err.println(configFile.getAbsolutePath() + " 不存在");
+
                         goToError();
                     }
-                    System.out.printf("special configFile file path: %s\n", configFile.getAbsolutePath());
+                  //  System.out.printf("special configFile file path: %s\n", configFile.getAbsolutePath());
+
+                    System.out.printf("配置文件路径: %s\n", configFile.getAbsolutePath());
 
                 } else if (arg.equals(ARG_OUT)) {
                     if (index == args.length - 1) {
-                        System.err.println("Missing output file argument");
+                       // System.err.println("Missing output file argument");
+                        System.err.println("没有找到文件输出参数");
+
+
                         goToError();
                     }
                     outputFile = new File(args[++index]);
@@ -310,49 +365,36 @@ public class CliMain extends Main {
                     if (parent != null && (!parent.exists())) {
                         parent.mkdirs();
                     }
-                    System.out.printf("special output directory path: %s\n", outputFile.getAbsolutePath());
+                   // System.out.printf("special output directory path: %s\n", outputFile.getAbsolutePath());
+
+                    System.out.printf("输出路径: %s\n", outputFile.getAbsolutePath());
+
 
                 } else if (arg.equals(ARG_SIGNATURE)) {
                     //需要检查是否有四个参数
-                    if (index == args.length - 1) {
-                        System.err.println("Missing signature data argument, should be "
-                            + ARG_SIGNATURE
-                            + " signature_file_path storepass keypass storealias");
-                        goToError();
-                    }
+                    checkArg_signature(index);
 
                     //在后面设置的时候会检查文件是否存在
                     signatureFile = new File(args[++index]);
-
-                    if (index == args.length - 1) {
-                        System.err.println("Missing signature data argument, should be "
-                            + ARG_SIGNATURE
-                            + " signature_file_path storepass keypass storealias");
-                        goToError();
-                    }
+                    //检查签名参数
+                    checkArg_signature(index);
 
                     storepass = args[++index];
 
-                    if (index == args.length - 1) {
-                        System.err.println("Missing signature data argument, should be "
-                            + ARG_SIGNATURE
-                            + " signature_file_path storepass keypass storealias");
-                        goToError();
-                    }
+                    checkArg_signature(index);
 
                     keypass = args[++index];
 
-                    if (index == args.length - 1) {
-                        System.err.println("Missing signature data argument, should be "
-                            + ARG_SIGNATURE
-                            + " signature_file_path storepass keypass storealias");
-                        goToError();
-                    }
+                    checkArg_signature(index);
+
                     storealias = args[++index];
                     mSetSignThroughCmd = true;
                 } else if (arg.equals(ARG_KEEPMAPPING)) {
                     if (index == args.length - 1) {
-                        System.err.println("Missing mapping file argument");
+                       // System.err.println("Missing mapping file argument");
+                        System.err.println("无法找到 mapping file 参数");
+
+
                         goToError();
                     }
                     //在后面设置的时候会检查文件是否存在
@@ -360,13 +402,18 @@ public class CliMain extends Main {
                     mSetMappingThroughCmd = true;
                 } else if (arg.equals(ARG_7ZIP)) {
                     if (index == args.length - 1) {
-                        System.err.println("Missing 7zip path argument");
+                        //System.err.println("Missing 7zip path argument");
+                        System.err.println("无法找到 7zip path 参数");
+
+
                         goToError();
                     }
                     m7zipPath = args[++index];
                 } else if (arg.equals(ARG_ZIPALIGN)) {
                     if (index == args.length - 1) {
-                        System.err.println("Missing zipalign path argument");
+                        ///System.err.println("Missing zipalign path argument");
+                        System.err.println("无法找到 zipalign path 参数");
+
                         goToError();
                     }
 
@@ -375,7 +422,8 @@ public class CliMain extends Main {
                 } else if (arg.equals(ARG_REPACKAGE)) {
                     //这个模式的话就直接干活了，不会再理其他命令！
                     if (index == args.length - 1) {
-                        System.err.println("Missing the signed apk file argument");
+                      //  System.err.println("Missing the signed apk file argument");
+                        System.err.println(" 无法找到重签打包文件 signed apk 参数");
                         goToError();
                     }
                     signedFile = args[++index];
@@ -384,6 +432,25 @@ public class CliMain extends Main {
                 }
             }
             return this;
+        }
+
+        /**
+         * 检查签名相关参数
+         * @param index
+         */
+        private void checkArg_signature(int index) {
+            if (index == args.length - 1) {
+//                System.err.println("Missing signature data argument, should be "
+//                        + ARG_SIGNATURE
+//                        + " signature_file_path storepass keypass storealias");
+                System.err.println("无法找到签名相关参数 : "
+                        + ARG_SIGNATURE
+                        + " signature_file_path storepass keypass storealias");
+
+
+
+                goToError();
+            }
         }
     }
 }
